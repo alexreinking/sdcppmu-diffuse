@@ -9,11 +9,17 @@ public:
     Output<Buffer<float, 3>> output{"output"};
     GeneratorParam<bool> threads{"threads", true};
 
-    void generate() { output(x, y, c) = Halide::random_float(); }
+    void generate()
+    {
+        output(x, y, c) = Halide::random_float();
+    }
 
-    void schedule() {
+    void schedule()
+    {
         output.vectorize(x, natural_vector_size<float>());
-        if (threads) { output.parallel(y, 8); }
+        if (threads) {
+            output.parallel(y, 8);
+        }
     }
 
 private:
@@ -29,7 +35,8 @@ public:
     Output<Buffer<float, 3>> new_state{"new_state"};
     GeneratorParam<bool> threads{"threads", false};
 
-    void generate() {
+    void generate()
+    {
         clamped = Halide::BoundaryConditions::repeat_edge(state);
 
         blur_x(x, y, c) =
@@ -96,7 +103,8 @@ public:
                        new_state(clobber.x, clobber.y, c));
     }
 
-    void schedule() {
+    void schedule()
+    {
         state.dim(2).set_bounds(0, 3);
         new_state.reorder(c, x, y).bound(c, 0, 3).unroll(c);
 
@@ -105,13 +113,17 @@ public:
         new_state.tile(x, y, xi, yi, 256, 8)
                 .vectorize(xi, natural_vector_size<float>());
 
-        for (int i = 0; i < 5; i++) { new_state.update(i).unscheduled(); }
+        for (int i = 0; i < 5; i++) {
+            new_state.update(i).unscheduled();
+        }
 
         blur.compute_at(new_state, xi).vectorize(x);
 
         clamped.store_at(new_state, x).compute_at(new_state, yi);
 
-        if (threads) { new_state.parallel(y); }
+        if (threads) {
+            new_state.parallel(y);
+        }
     }
 
 private:
@@ -126,7 +138,8 @@ public:
     Output<Buffer<uint32_t, 2>> render{"render"};
     GeneratorParam<bool> threads{"threads", false};
 
-    void generate() {
+    void generate()
+    {
         Func contour;
         Expr v = state(x, y, c) * (1.01f - state(x, y, c)) * 4;
         v *= v;
@@ -152,9 +165,12 @@ public:
         render(x, y) = bgra;
     }
 
-    void schedule() {
+    void schedule()
+    {
         render.vectorize(x, natural_vector_size<float>());
-        if (threads) { render.parallel(y, 4); }
+        if (threads) {
+            render.parallel(y, 4);
+        }
     }
 
 private:

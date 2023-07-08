@@ -27,10 +27,16 @@ cmake_dependent_option(
     "NOT CMAKE_SKIP_INSTALL_RULES" ON
 )
 
+option(diffuse_BUILD_APPS "When enabled, build the demo apps for diffuse" "${PROJECT_IS_TOP_LEVEL}")
+
 ##
 # Include project sources
 
 add_subdirectory(src)
+
+if (diffuse_BUILD_APPS)
+    add_subdirectory(apps)
+endif ()
 
 if (diffuse_BUILD_TESTING)
     add_subdirectory(test)

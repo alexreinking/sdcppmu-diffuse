@@ -5,12 +5,16 @@
 
 int main(int argc, char *argv[])
 {
+    // SDL needs main() to have this signature.
+    (void) argc;
+    (void) argv;
+
     constexpr int WIDTH = 640;
     constexpr int HEIGHT = 480;
 
     SDL_Init(SDL_INIT_VIDEO);
 
-    SDL_Window *window = SDL_CreateWindow("Halide demo", SDL_WINDOWPOS_CENTERED,
+    SDL_Window *window = SDL_CreateWindow("Diffuse", SDL_WINDOWPOS_CENTERED,
                                           SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT, 0);
     SDL_Renderer *renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC);
     SDL_Texture *tex = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888,
