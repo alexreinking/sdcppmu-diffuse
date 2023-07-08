@@ -1,3 +1,6 @@
+# allow non-standard package layout
+set(VCPKG_POLICY_EMPTY_PACKAGE enabled)
+
 set(version 16.0.0)
 set(commit 1e963ff817ef0968cc25d811a25a7350c8953ee6)
 
@@ -67,6 +70,6 @@ vcpkg_extract_source_archive(
 
 file(
     INSTALL "${halide_binaries}/"
-    DESTINATION "${CURRENT_INSTALLED_DIR}"
+    DESTINATION "${CURRENT_PACKAGES_DIR}"
     PATTERN "share/doc" EXCLUDE
 )
