@@ -1,0 +1,1 @@
+# This is where one would write tests for the diffuse library
