@@ -30,9 +30,50 @@ cmake_dependent_option(
 option(diffuse_BUILD_APPS "When enabled, build the demo apps for diffuse" "${PROJECT_IS_TOP_LEVEL}")
 
 ##
-# Include project sources
+# Dependencies
 
-add_subdirectory(src)
+find_package(HalideHelpers 16 REQUIRED)
+
+##
+# Halide pipelines
+
+add_halide_generator(
+    diffuse_generator
+    SOURCES src/reaction_diffusion_generator.cpp
+)
+
+add_halide_library(reaction_diffusion_init FROM diffuse_generator)
+add_halide_library(reaction_diffusion_update FROM diffuse_generator)
+add_halide_library(reaction_diffusion_render FROM diffuse_generator)
+
+##
+# Main diffuse library
+
+add_library(diffuse_diffuse)
+add_library(diffuse::diffuse ALIAS diffuse_diffuse)
+
+target_sources(diffuse_diffuse PRIVATE src/diffuse.cpp)
+target_sources(
+    diffuse_diffuse
+    PUBLIC
+    FILE_SET HEADERS
+    BASE_DIRS include
+    FILES include/diffuse/diffuse.h
+)
+
+target_compile_features(diffuse_diffuse PRIVATE cxx_std_17)
+
+target_link_libraries(
+    diffuse_diffuse
+    PRIVATE
+    reaction_diffusion_init
+    reaction_diffusion_update
+    reaction_diffusion_render
+)
+
+
+##
+# Include optional components
 
 if (diffuse_BUILD_APPS)
     add_subdirectory(apps)
