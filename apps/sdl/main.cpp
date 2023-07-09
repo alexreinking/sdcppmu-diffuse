@@ -20,7 +20,7 @@ struct Context {
 
 void render_frame(void *arg_ctx)
 {
-    Context *ctx = static_cast<Context *>(ctx);
+    auto ctx = static_cast<Context *>(arg_ctx);
 
 #ifndef __EMSCRIPTEN__
     SDL_Event e;
@@ -71,7 +71,7 @@ int main(int argc, char *argv[])
     emscripten_set_main_loop_arg(render_frame, &ctx, -1 /* unlocked fps */,
                                  1 /* simulate infinite loop*/);
 #else
-    while (ctx->running) {
+    while (ctx.running) {
         render_frame((void *) &ctx);
     }
 #endif
