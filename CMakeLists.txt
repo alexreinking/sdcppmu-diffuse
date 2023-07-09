@@ -53,8 +53,16 @@ add_halide_generator(
 )
 
 add_halide_library(reaction_diffusion_init FROM diffuse_generator)
-add_halide_library(reaction_diffusion_update FROM diffuse_generator)
-add_halide_library(reaction_diffusion_render FROM diffuse_generator)
+
+add_halide_library(
+    reaction_diffusion_update FROM diffuse_generator
+    USE_RUNTIME reaction_diffusion_init.runtime
+)
+
+add_halide_library(
+    reaction_diffusion_render FROM diffuse_generator
+    USE_RUNTIME reaction_diffusion_init.runtime
+)
 
 ##
 # Main diffuse library
