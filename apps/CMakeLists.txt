@@ -5,6 +5,9 @@ project(diffuse_apps NONE)
 # When building in-tree, we don't want the apps to do a real
 # call to find_package(diffuse REQUIRED)
 
+# note: can't use the new dependency providers feature because
+# it only works before the first project() call.
+
 file(
     CONFIGURE
     OUTPUT cmake/Finddiffuse.cmake

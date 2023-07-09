@@ -3,9 +3,11 @@
 
 #include <cstdint>
 
+#include "diffuse/export.h"
+
 class ReactionSimulatorImpl;
 
-class ReactionSimulator {
+class DIFFUSE_EXPORT ReactionSimulator {
     ReactionSimulatorImpl *impl;
 
 public:
