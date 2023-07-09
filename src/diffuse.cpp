@@ -11,15 +11,12 @@
 using namespace Halide::Runtime;
 
 class ReactionSimulatorImpl {
-    int width;
-    int height;
     Buffer<float> buf1;
     Buffer<float> buf2;
 
 public:
     ReactionSimulatorImpl(int width, int height)
-        : width(width), height(height), buf1(Buffer<float>{width, height, 3}),
-          buf2(Buffer<float>{width, height, 3})
+        : buf1(Buffer<float>{width, height, 3}), buf2(Buffer<float>{width, height, 3})
     {
         halide_set_num_threads(static_cast<int>(std::thread::hardware_concurrency()));
         reaction_diffusion_init(buf1);
@@ -33,8 +30,9 @@ public:
     void render(uint32_t *pixels, int pitch)
     {
         int stride = pitch / (int) sizeof(uint32_t);
-        Buffer<uint32_t> pixel_buf(pixels, {{0, width, 1}, {0, height, stride}});
-        reaction_diffusion_render(buf2, pixel_buf);
+        Buffer<uint32_t> render_buffer(
+                pixels, {{0, buf1.width(), 1}, {0, buf1.height(), stride}});
+        reaction_diffusion_render(buf2, render_buffer);
         std::swap(buf1, buf2);
     }
 };
