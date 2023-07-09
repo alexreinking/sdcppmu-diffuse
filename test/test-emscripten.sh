@@ -22,8 +22,9 @@ export CMAKE_TOOLCHAIN_FILE
 
 cmake -S . -B build/diffuse \
   -Ddiffuse-halide_generators_ROOT="$PWD/build/host" \
-  -DHalide_TARGET=wasm-32-wasmrt-wasm_simd128-wasm_threads
-cmake --build build/diffuse
+  -DHalide_TARGET=wasm-32-wasmrt-wasm_simd128-wasm_threads \
+  -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH
+cmake --build build/diffuse --verbose
 cmake --install build/diffuse --prefix _local
 
 ##
@@ -31,5 +32,5 @@ cmake --install build/diffuse --prefix _local
 
 export CMAKE_PREFIX_PATH="$PWD/_local"
 
-cmake -S apps/sdl -B build/sdl
-cmake --build build/sdl
+cmake -S apps/sdl -B build/sdl -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH
+cmake --build build/sdl --verbose

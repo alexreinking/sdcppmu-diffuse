@@ -27,3 +27,7 @@ if (CMAKE_IMPORT_LIBRARY_SUFFIX)
         COMMAND_EXPAND_LISTS
     )
 endif ()
+
+if (EMSCRIPTEN)
+    configure_file(index.html index.html COPYONLY)
+endif ()
