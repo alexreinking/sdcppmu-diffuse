@@ -30,7 +30,7 @@ cmake_dependent_option(
     "NOT CMAKE_SKIP_INSTALL_RULES" ON
 )
 
-option(diffuse_BUILD_APPS "When enabled, build the demo apps for diffuse" "${PROJECT_IS_TOP_LEVEL}")
+option(diffuse_BUILD_APPS "When enabled, build the demo apps for diffuse" NO)
 
 ##
 # Override CMake defaults

@@ -11,8 +11,8 @@ if (test-path _local) { rm -r -fo _local }
 
 # Library builds
 
-cmake -S . -B build/shared -Ddiffuse_BUILD_APPS=NO -DBUILD_SHARED_LIBS=YES
-cmake -S . -B build/static -Ddiffuse_BUILD_APPS=NO -DBUILD_SHARED_LIBS=NO
+cmake -S . -B build/shared -DBUILD_SHARED_LIBS=YES
+cmake -S . -B build/static -DBUILD_SHARED_LIBS=NO
 
 cmake --build build/shared
 cmake --build build/static
