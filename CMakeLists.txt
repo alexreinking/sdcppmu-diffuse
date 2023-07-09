@@ -32,12 +32,36 @@ cmake_dependent_option(
 
 option(diffuse_BUILD_APPS "When enabled, build the demo apps for diffuse" "${PROJECT_IS_TOP_LEVEL}")
 
+##
+# Override CMake defaults
 set(
     CMAKE_CXX_VISIBILITY_PRESET hidden
     CACHE STRING "Value for the -fvisibility flag on supported compilers."
 )
 
 option(CMAKE_VISIBILITY_INLINES_HIDDEN "When enabled, hide inline symbols" YES)
+
+# CMAKE_STATIC_LIBRARY_PREFIX is a *normal* variable, set by the
+# platform module, so simply setting a cache variable (either here,
+# at the command line, or in a preset) does not work. Instead, we
+# offer a project option to disable overriding it if doing so causes
+# problems. Because it is typically benign and helpful to downstreams,
+# we enable it by default.
+cmake_dependent_option(
+    diffuse_OVERRIDE_STATIC_PREFIX "When enabled, set CMAKE_STATIC_LIBRARY_PREFIX to 'lib'" ON
+    "CMAKE_IMPORT_LIBRARY_SUFFIX" OFF
+)
+mark_as_advanced(diffuse_OVERRIDE_STATIC_PREFIX)
+
+if (diffuse_OVERRIDE_STATIC_PREFIX)
+    # This resolves the name clash between the import library
+    # (X.dll + X.lib) and the static library (also X.lib) by
+    # changing the static library convention to libX.lib.
+    # See: https://gitlab.kitware.com/cmake/cmake/-/issues/17338
+    # See: https://cmake.org/Bug/view.php?id=10190
+    # See: https://stackoverflow.com/q/2140129/2137996
+    set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
+endif ()
 
 ##
 # Dependencies
@@ -87,6 +111,7 @@ target_compile_features(diffuse_diffuse PRIVATE cxx_std_17)
 # Note: the complexity here is working around a bug (or missing feature)
 # in CMake where generate_export_header is unnecessarily sensitive to the
 # library type.
+# See: https://gitlab.kitware.com/cmake/cmake/-/issues/23195
 
 if (BUILD_SHARED_LIBS)
     set(type "shared")

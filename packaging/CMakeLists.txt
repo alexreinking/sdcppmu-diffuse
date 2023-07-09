@@ -1,10 +1,10 @@
 include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
+set(dependencies Threads)
 if (BUILD_SHARED_LIBS)
     set(type shared)
     set(extra_targets "")
-    set(dependencies "")
 else ()
     set(type static)
 
@@ -20,7 +20,7 @@ else ()
         reaction_diffusion_init.runtime
     )
 
-    set(dependencies HalideHelpers)
+    list(APPEND dependencies HalideHelpers)
 endif ()
 
 install(
