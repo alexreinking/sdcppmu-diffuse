@@ -75,6 +75,8 @@ set_target_properties(
     PROPERTIES
     OUTPUT_NAME diffuse
     EXPORT_NAME diffuse
+    VERSION ${diffuse_VERSION}
+    SOVERSION ${diffuse_VERSION_MAJOR}
 )
 
 ## Set language level
