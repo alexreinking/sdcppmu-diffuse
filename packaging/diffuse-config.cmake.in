@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.26)
 @PACKAGE_INIT@
 
-include(CMakeFindDependencyMacro)
-
 macro(_diffuse_bail reason)
     set(${CMAKE_FIND_PACKAGE_NAME}_FOUND 0)
     set(${CMAKE_FIND_PACKAGE_NAME}_NOT_FOUND_MESSAGE "${reason}")
@@ -22,7 +20,7 @@ macro(_diffuse_load)
     endforeach ()
 
     if (NOT loaded)
-        _diffuse_bail("diffuse `${type}` libraries were requested but not found.")
+        _diffuse_bail("diffuse `${ARGN}` libraries were requested but not found.")
     endif ()
 endmacro()
 

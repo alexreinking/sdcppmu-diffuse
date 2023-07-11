@@ -1,7 +1,8 @@
 include(GNUInstallDirs)
-include(CMakePackageConfigHelpers)
 
-set(dependencies Threads)
+set(diffuse_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/diffuse"
+    CACHE STRING "Relative path beneath install prefix to place CMake package files")
+
 if (BUILD_SHARED_LIBS)
     set(type shared)
     set(extra_targets "")
@@ -19,8 +20,6 @@ else ()
         reaction_diffusion_render
         reaction_diffusion_init.runtime
     )
-
-    list(APPEND dependencies HalideHelpers)
 endif ()
 
 install(
@@ -32,9 +31,6 @@ install(
     FILE_SET HEADERS COMPONENT diffuse-development
 )
 
-set(diffuse_INSTALL_CMAKEDIR "${CMAKE_INSTALL_LIBDIR}/cmake/diffuse"
-    CACHE STRING "Relative path beneath install prefix to place CMake package files")
-
 install(
     EXPORT diffuse-${type}-targets
     DESTINATION "${diffuse_INSTALL_CMAKEDIR}"
@@ -42,30 +38,11 @@ install(
     COMPONENT diffuse-development
 )
 
-if (dependencies)
-    file(
-        CONFIGURE
-        OUTPUT diffuse-${type}-deps.cmake
-        CONTENT [[
-set(dependencies "@dependencies@")
-foreach (dep IN LISTS dependencies)
-    find_dependency(${dep})
-endforeach ()
-]]
-        @ONLY
-    )
-    install(
-        FILES "${CMAKE_CURRENT_BINARY_DIR}/diffuse-${type}-deps.cmake"
-        DESTINATION "${diffuse_INSTALL_CMAKEDIR}"
-        COMPONENT diffuse-development
-    )
-endif ()
+include(CMakePackageConfigHelpers)
 
 configure_package_config_file(
     diffuse-config.cmake.in diffuse-config.cmake
     INSTALL_DESTINATION "${diffuse_INSTALL_CMAKEDIR}"
-    NO_SET_AND_CHECK_MACRO
-    NO_CHECK_REQUIRED_COMPONENTS_MACRO
 )
 
 write_basic_package_version_file(
@@ -77,6 +54,7 @@ install(
     FILES
     "${CMAKE_CURRENT_BINARY_DIR}/diffuse-config.cmake"
     "${CMAKE_CURRENT_BINARY_DIR}/diffuse-config-version.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/diffuse-${type}-deps.cmake"
     DESTINATION "${diffuse_INSTALL_CMAKEDIR}"
     COMPONENT diffuse-development
 )
