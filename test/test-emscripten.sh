@@ -30,6 +30,7 @@ cmake --install build/diffuse --prefix _local
 ##
 # Phase 3: build the SDL app for emscripten
 
+export HalideHelpers_ROOT="$CMAKE_PREFIX_PATH"
 export CMAKE_PREFIX_PATH="$PWD/_local"
 
 cmake -S apps/sdl -B build/sdl -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH
