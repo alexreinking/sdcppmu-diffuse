@@ -20,7 +20,7 @@ export CMAKE_TOOLCHAIN_FILE
 ##
 # Phase 2: build diffuse for emscripten
 
-cmake -S . -B build/diffuse \
+cmake -Wno-dev -S . -B build/diffuse \
   -Ddiffuse-halide_generators_ROOT="$PWD/build/host" \
   -DHalide_TARGET=wasm-32-wasmrt-wasm_simd128-wasm_threads \
   -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH
@@ -30,8 +30,7 @@ cmake --install build/diffuse --prefix _local
 ##
 # Phase 3: build the SDL app for emscripten
 
-export HalideHelpers_ROOT="$CMAKE_PREFIX_PATH"
-export CMAKE_PREFIX_PATH="$PWD/_local"
+export diffuse_ROOT="$PWD/_local"
 
-cmake -S apps/sdl -B build/sdl -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH
+cmake -Wno-dev -S apps/sdl -B build/sdl -DCMAKE_FIND_ROOT_PATH_MODE_PACKAGE=BOTH
 cmake --build build/sdl --verbose
