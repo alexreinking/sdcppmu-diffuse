@@ -9,14 +9,6 @@ macro(_diffuse_bail reason)
     return()
 endmacro()
 
-macro(_diffuse_find_deps_static)
-    find_dependency(HalideHelpers)
-endmacro()
-
-macro(_diffuse_find_deps_shared)
-    # Nothing to do
-endmacro()
-
 macro(_diffuse_load)
     set(loaded 0)
 
